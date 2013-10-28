@@ -1,7 +1,31 @@
 /* address-book.js
     this is where you will add your JavaScript to complete Lab 5
 */
+/*Qingying Hao, INFO 343, Lab5*/
 
+//This method is used to insert the content in the entries array to the
+//index.html page and render them. I did the fadeIn optional function here. 
+function render(entries) {
+    var template = $('.template');
+    var container = $('.address-book');
+    container.hide();
+    container.empty();
+    var instance;
+    $.each(entries, function(){
+        instance = template.clone();
+        instance.find('.first').html(this.first);
+        instance.find('.last').html(this.last);
+        instance.find('.title').html(this.title);
+        instance.find('.dept').html(this.dept);
+        instance.find('.pic').attr({
+            src: this.pic,
+            alt: 'Picture of ' + this.first + ' ' +  this.last
+        });
+        instance.removeClass('template');
+        container.append(instance);
+        container.fadeIn();
+    });
+}
 
 /* sortObjArray()
     sorts an array of objects by a given property name
@@ -34,3 +58,22 @@ function sortObjArray(objArray, propName) {
     });
 } //sortObjArray()
 
+//This function is used to render the entries when the page is fully downloaded. 
+//It renders different sorted entries according to users' choices. 
+$(function() {
+    sortObjArray(Employees.entries, 'last');
+    render(Employees.entries);
+
+   $('.sort-ui .btn').click(function() {
+        var sortBtn = $(this);
+        var item = sortBtn.attr('data-sortby');
+        sortObjArray(Employees.entries, item);
+        render(Employees.entries);
+        sortBtn.siblings('.active').removeClass('active');
+        sortBtn.addClass('active');
+
+   });
+});
+
+  
+   
